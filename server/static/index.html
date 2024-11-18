@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colloquium - AI Scripting Made Simple</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --chalk-green: #a8e6cf;
+            --chalk-purple: #d4a5ff;
+            --dark-bg: #1a1a1a;
+            --text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(168, 230, 207, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(212, 165, 255, 0.15) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(120deg, var(--chalk-green), var(--chalk-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+
+        .tagline {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--chalk-green);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--chalk-purple);
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 2rem 0;
+            border-left: 4px solid var(--chalk-purple);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .button {
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .primary {
+            background: var(--chalk-purple);
+            color: var(--dark-bg);
+        }
+
+        .secondary {
+            background: transparent;
+            border: 2px solid var(--chalk-green);
+            color: var(--chalk-green);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+            
+            .tagline {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="content">
+            <h1>Colloquium</h1>
+            <div class="tagline">Scripting AI has never been simpler</div>
+            
+            <div class="code-block">
+                <code>
+                    #URI https://api.openai.com/v1<br>
+                    #TRANSLATOR openai<br>
+                    #MODEL gpt-4<br>
+                    #TOOL fileaccess<br>
+                    #TOOL keyvaluestore<br>
+                    #ATTACH "code.bundle" TheCode<br>
+                    #RUN refactor_01_generate_ideas.qb TheCode "refactor_ideas.txt"<br>
+                    #ITERATE refactor_02_evaluate_ideas.qb "refactor_ideas.txt" "refactor_good_ideas.txt"<br>
+                    #RUN refactor_03_report.qb "refactor_good_ideas.txt" "refactor_plan.txt"<br>
+                </code>
+            </div>
+
+            <div class="buttons">
+                <a href="https://github.com/HarryPehkonen/colloquium" class="button primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="https://colloquium.bot/docs" class="button secondary">Documentation</a>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-code"></i>
+                    <h3>Simple Scripting</h3>
+                    <p>Write and execute AI scripts with intuitive commands and seamless API integration.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-sync"></i>
+                    <h3>Context Management</h3>
+                    <p>Automatically manage conversation context, remove irrelevant messages, and optimize API usage.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-plug"></i>
+                    <h3>API Flexibility</h3>
+                    <p>Compatible with OpenAI-style APIs and customizable for different LLM providers.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</html>

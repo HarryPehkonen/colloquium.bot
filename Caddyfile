@@ -1,0 +1,95 @@
+{
+    # Disable admin interface for security purposes
+    admin off
+
+    # Configure supported HTTP protocols
+    servers {
+        protocols h1 h2  # HTTP/1.1 and HTTP/2
+    }
+
+    # Email for Let's Encrypt notifications (certificate expiration, etc)
+    # This is the only manual change you need for SSL setup
+    email harry.pehkonen@gmail.com
+}
+
+# Main site configuration
+colloquium.bot {
+
+    @ratelimit {
+        not path /health  # Don't rate limit health checks
+        protocol http*
+    }
+    
+    handle @ratelimit {
+        header ?Response-Rate-Limit "limit=100;window=10s"
+        abort  # Return 429 Too Many Requests if rate exceeded
+    }
+
+    # Main site handler - all requests to / will be forwarded to your Deno app
+    handle / {
+        reverse_proxy localhost:3000 {
+            # Health check configuration:
+            # Caddy will periodically send requests to /health
+            # to ensure your application is running properly
+            health_uri /health          # The endpoint to check
+            health_interval 10s         # Check every 10 seconds
+            health_timeout 5s           # Wait up to 5 seconds for response
+            health_status 200           # Expect HTTP 200 OK response
+            
+            # Forward important headers to your application
+            header_up Host {upstream_hostport}         # Original host requested
+            header_up X-Real-IP {remote_host}         # Client's real IP
+        }
+    }
+
+    # Documentation route - Deno will see the full /docs/* path
+    # Your app can handle these routes normally with its router
+    handle /docs/* {
+        reverse_proxy localhost:3000 {
+            # Same header forwarding as above
+            header_up Host {upstream_hostport}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+
+    # Security headers to protect against common web vulnerabilities
+    header {
+        # Enforce HTTPS for this domain and subdomains
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        
+        # Help prevent XSS attacks
+        X-XSS-Protection "1; mode=block"
+        
+        # Prevent your site from being embedded in iframes on other domains
+        X-Frame-Options "SAMEORIGIN"
+        
+        # Prevent MIME type sniffing
+        X-Content-Type-Options "nosniff"
+        
+        # Control how much information is sent when linking to external sites
+        Referrer-Policy "strict-origin-when-cross-origin"
+        
+        # Disable browser features we don't need
+        Permissions-Policy "geolocation=(), microphone=()"
+    }
+
+    # Enable compression for responses
+    encode zstd gzip
+
+    # Logging configuration
+    log {
+        # Log to file with automatic rotation
+        output file /var/log/caddy/colloquium.log {
+            roll_size 10MB          # Create new file after 10MB
+            roll_keep 10            # Keep 10 most recent files
+            roll_keep_for 720h      # Delete logs older than 30 days
+        }
+        format json    # Use JSON format for structured logging
+    }
+}
+
+# Redirect www subdomain to main domain
+www.colloquium.bot {
+    redir https://colloquium.bot{uri} permanent
+}
+
